@@ -1,6 +1,6 @@
-﻿using prueba.model;
+﻿using prueba.src.model;
 
-namespace prueba.consumer
+namespace prueba.src.consumer
 {
     public class Consumer
     {
@@ -16,17 +16,17 @@ namespace prueba.consumer
 
         public void consume()
         {
-            Console.WriteLine($"CONSUMER - {nombreConsumer} starts consuming in thread {Thread.CurrentThread.ManagedThreadId}...");
+            Console.WriteLine($"CONSUMER - {nombreConsumer} starts consuming in thread {Environment.CurrentManagedThreadId}...");
             while (true)
             {
                 Dato? dato = monitor.Consume();
-                if ( dato != null )
+                if (dato != null)
                 {
                     Console.WriteLine($"CONSUMER - {nombreConsumer} consumed {dato.Nombre}.\n" +
                         $"           Numero del dato: {dato.Numero}\n" +
                         $"           Mitad de ese numero: {dato.MitadDelNumero}");
                 }
-                Thread.Sleep( delay );
+                Thread.Sleep(delay);
             }
         }
     }

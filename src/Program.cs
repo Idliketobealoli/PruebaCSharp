@@ -1,14 +1,18 @@
 ﻿// control de errores con log4net (no me sale en NuGet - Mirar por que)
 
-using prueba.consumer;
-using prueba.producer;
+using prueba.src.consumer;
+using prueba.src.producer;
+using System.Diagnostics;
 
-namespace prueba
+namespace prueba.src
 {
     public class Program
     {
         public static void Main()
         {
+            Stopwatch sw = new();
+            sw.Start();
+
             int NumConsumidores = 5;
             int NumProductores = 7;
             List<Producer> Productores = new();
@@ -18,7 +22,7 @@ namespace prueba
             Random random = new();
             CancellationTokenSource tokenSource = new();
 
-            Console.WriteLine("MAIN - Starting application.");
+            Console.WriteLine("MAIN     - Starting application.");
 
             while (Productores.Count < NumProductores)
             {
@@ -62,22 +66,23 @@ namespace prueba
 
                 if (finished.Status == TaskStatus.RanToCompletion)
                 {
-                    Console.WriteLine($"MAIN - Producers finished producing. Shutting down in 5 seconds...");
+                    Console.WriteLine($"MAIN     - Producers finished producing. Shutting down in 5 seconds...");
                     Thread.Sleep(5000);
-                    Console.WriteLine($"MAIN - Shutting down consumers...");
+                    Console.WriteLine($"MAIN     - Shutting down consumers...");
                     tokenSource.Cancel();
-                    Environment.Exit(0);
                 }
             }
-            catch ( Exception ex )
+            catch (Exception ex)
             {
-                Console.WriteLine( ex.ToString() );
+                Console.WriteLine(ex.ToString());
                 tokenSource.Cancel();
             }
 
             finally
             {
                 tokenSource.Dispose();
+                sw.Stop();
+                Console.WriteLine($"\nMAIN     - Execution finished in {sw.ElapsedMilliseconds} ms.");
             }
         }
     }

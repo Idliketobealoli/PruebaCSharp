@@ -1,6 +1,6 @@
-﻿using prueba.model;
+﻿using prueba.src.model;
 
-namespace prueba.producer
+namespace prueba.src.producer
 {
     public class Producer
     {
@@ -10,7 +10,7 @@ namespace prueba.producer
         private int producidas = 0;
         private MonitorDatos monitor = MonitorDatos.GetInstance();
 
-        public Producer(int max,  string nombre, int delay)
+        public Producer(int max, string nombre, int delay)
         {
             maxProducciones = max;
             nombreProducer = nombre;
@@ -19,13 +19,13 @@ namespace prueba.producer
 
         public void producir()
         {
-            Console.WriteLine($"PRODUCER - {nombreProducer} starts producing in thread {Thread.CurrentThread.ManagedThreadId}...");
+            Console.WriteLine($"PRODUCER - {nombreProducer} starts producing in thread {Environment.CurrentManagedThreadId}...");
             Random random = new();
 
             while (producidas < maxProducciones)
             {
                 producidas++;
-                Dato dato = new Dato(random.Next(1,100), $"Dato {producidas} from {nombreProducer}.");
+                Dato dato = new Dato(random.Next(1, 100), $"Dato {producidas} from {nombreProducer}.");
                 monitor.Add(dato);
                 Console.WriteLine($"PRODUCER - {nombreProducer} produced one data.");
                 Thread.Sleep(delay);

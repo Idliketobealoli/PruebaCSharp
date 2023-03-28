@@ -1,4 +1,4 @@
-﻿namespace prueba.model
+﻿namespace prueba.src.model
 {
     public class Dato
     {
