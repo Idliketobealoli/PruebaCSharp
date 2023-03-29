@@ -3,6 +3,7 @@
 using prueba.src.consumer;
 using prueba.src.producer;
 using System.Diagnostics;
+using System.Text.RegularExpressions;
 
 namespace prueba.src
 {
@@ -54,7 +55,13 @@ namespace prueba.src
             Consumidores.ForEach(
                 consumer =>
                 {
-                    var task = Task.Run(() => { consumer.consume(); }, tokenSource.Token);
+                    var task = Task.Run(() =>
+                    {
+                        var r = random.Next(1, 3);
+                        if (r == 1) consumer.Consume(null, null);
+                        else if (r == 2) consumer.Consume(random.Next(20, 30), random.Next(40, 50));
+                        else consumer.Consume(random.Next(20, 50), random.Next(60, 80));
+                    }, tokenSource.Token);
                     ConsTasks.Add(task);
                 }
             );
