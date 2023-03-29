@@ -41,8 +41,8 @@ namespace prueba.src.consumer
                                         where d.Numero <= max
                                         select d).ToList();
                     }
-                    if (min == null) { min = 0; }
-                    if (max == null) { max = 0; }
+                    min ??= 0;
+                    max ??= 0;
                     Console.WriteLine($"CONSUMER - {NombreConsumer} has consumed a total of {filteredList.Count} elements " +
                         $"with a number between {min} and {max}.");
                 }

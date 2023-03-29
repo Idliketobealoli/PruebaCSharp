@@ -1,4 +1,5 @@
 ﻿using prueba.src.model;
+using System.Collections.Concurrent;
 
 namespace prueba.src
 {
@@ -7,7 +8,7 @@ namespace prueba.src
         private MonitorDatos() { }
         private static MonitorDatos _instance;
 
-        private List<Dato> Datos { get; set; }
+        private ConcurrentQueue<Dato> Datos { get; set; }
 
         private static readonly object _lock = new();
 
@@ -20,7 +21,7 @@ namespace prueba.src
                     if (_instance == null)
                     {
                         _instance = new MonitorDatos();
-                        _instance.Datos = new List<Dato>();
+                        _instance.Datos = new ConcurrentQueue<Dato>();
                     }
                 }
             }
@@ -29,24 +30,17 @@ namespace prueba.src
 
         public void Add(Dato dato)
         {
-            lock (_lock)
-            {
-                Datos.Add(dato);
-            }
+             Datos.Enqueue(dato);
         }
 
         public Dato? Consume()
         {
-            lock (_lock)
+            Datos.TryDequeue(out Dato? dato);
+            if (dato != null)
             {
-                Dato? dato = Datos.FirstOrDefault();
-                if (dato != null)
-                {
-                    Console.WriteLine($"MONITOR  - Giving {dato.Nombre}");
-                    Datos.RemoveAt(0);
-                }
-                return dato;
+                Console.WriteLine($"MONITOR  - Giving {dato.Nombre}");
             }
+            return dato;
         }
     }
 }
